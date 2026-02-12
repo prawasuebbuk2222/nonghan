@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบร้องเรียน/ร้องทุกข์ เทศบาลหนองหาร</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Sarabun', sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .status-pending { background: #FEF3C7; color: #92400E; }
+    .status-processing { background: #DBEAFE; color: #1E40AF; }
+    .status-completed { background: #D1FAE5; color: #065F46; }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full bg-gray-50">
+  <div id="app" class="h-full w-full overflow-auto"><!-- Header -->
+   <header id="main-header" class="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white shadow-lg sticky top-0 z-40">
+    <div class="px-4 py-3 sm:px-6">
+     <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+       <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+        <svg class="w-6 h-6 sm:w-10 sm:h-10 text-blue-900" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+        </svg>
+       </div>
+       <div class="min-w-0">
+        <h1 id="header-title" class="text-lg sm:text-2xl font-bold tracking-wide truncate">ระบบร้องเรียน</h1>
+        <p id="header-subtitle" class="text-yellow-400 font-medium text-xs sm:text-sm truncate">เทศบาลหนองหาร</p>
+       </div>
+      </div>
+      <div class="flex gap-1 sm:gap-2 flex-shrink-0"><button onclick="showPage('home')" class="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-lg hover:bg-white/10 transition-all font-medium">หน้าแรก</button> <button onclick="showPage('complaint')" class="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-lg hover:bg-white/10 transition-all font-medium">แจ้งเรื่อง</button> <button onclick="showPage('status')" class="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-lg hover:bg-white/10 transition-all font-medium">สถานะ</button> <button onclick="showPage('staff-login')" class="text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition-all font-medium">เจ้าหน้าที่</button>
+      </div>
+     </div>
+    </div>
+    <div class="bg-yellow-500 h-1"></div>
+   </header><!-- Page 1: Home -->
+   <div id="page-home" class="page active"><!-- Hero Banner -->
+    <section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 text-white py-8 sm:py-16 overflow-hidden">
+     <div class="absolute inset-0 opacity-10">
+      <svg class="w-full h-full" viewbox="0 0 100 100" preserveaspectratio="none"><defs>
+        <pattern id="grid" width="10" height="10" patternunits="userSpaceOnUse">
+         <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" />
+        </pattern>
+       </defs> <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+     </div>
+     <div class="max-w-6xl mx-auto px-4 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 bg-yellow-500 text-gray-900 px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-6">
+       <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewbox="0 0 20 20">
+        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z" />
+       </svg> เปิดให้บริการ 24 ชั่วโมง
+      </div>
+      <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4">ระบบรับเรื่องร้องเรียน</h2>
+      <p class="text-sm sm:text-xl text-blue-100 mb-4 sm:mb-8 max-w-2xl mx-auto">เปิดรับแจ้งปัญหา เพื่อพัฒนาชุมชนอย่างยั่งยืน</p>
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"><button onclick="showPage('complaint')" class="bg-red-600 hover:bg-red-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-lg shadow-lg hover:shadow-xl transition-all"> แจ้งเรื่องร้องเรียน </button> <button onclick="showPage('status')" class="bg-white/10 hover:bg-white/20 text-white border-2 border-white/30 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-lg transition-all"> ตรวจสอบสถานะ </button>
+      </div>
+     </div>
+    </section><!-- Steps -->
+    <section class="py-6 sm:py-12 bg-white border-b border-gray-200">
+     <div class="max-w-6xl mx-auto px-4">
+      <h3 class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-6 sm:mb-10">ขั้นตอนการใช้งาน</h3>
+      <div class="grid md:grid-cols-3 gap-4 sm:gap-8">
+       <div class="text-center">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 border-4 border-red-200"><span class="text-2xl sm:text-3xl font-bold text-red-600">1</span>
+        </div>
+        <h4 class="text-base sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2">กรอกข้อมูล</h4>
+        <p class="text-xs sm:text-sm text-gray-600">กรอกรายละเอียดปัญหาและข้อมูล</p>
+       </div>
+       <div class="text-center">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 border-4 border-yellow-200"><span class="text-2xl sm:text-3xl font-bold text-yellow-600">2</span>
+        </div>
+        <h4 class="text-base sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2">เจ้าหน้าที่ตรวจสอบ</h4>
+        <p class="text-xs sm:text-sm text-gray-600">เจ้าหน้าที่รับเรื่องและตรวจสอบ</p>
+       </div>
+       <div class="text-center">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 border-4 border-green-200"><span class="text-2xl sm:text-3xl font-bold text-green-600">3</span>
+        </div>
+        <h4 class="text-base sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2">แจ้งผลการดำเนินการ</h4>
+        <p class="text-xs sm:text-sm text-gray-600">รับแจ้งผลผ่านระบบ</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Problem Categories -->
+    <section class="py-6 sm:py-12 bg-gray-50">
+     <div class="max-w-6xl mx-auto px-4">
+      <h3 class="text-lg sm:text-2xl font-bold text-center text-gray-800 mb-1 sm:mb-2">ประเภทปัญหาที่รับแจ้ง</h3>
+      <p class="text-center text-xs sm:text-base text-gray-600 mb-4 sm:mb-10">เลือกหมวดหมู่ปัญหา</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='ถนนชำรุด'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-orange-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-orange-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M18 4h-1V2h-2v2H9V2H7v2H6c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM6 20V9h12v11H6zm2-9h3v3H8v-3zm5 0h3v3h-3v-3zm-5 5h3v3H8v-3zm5 0h3v3h-3v-3z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">ถนนชำรุด</h4>
+        <p class="text-xs text-gray-500">ถนน ทางเท้า</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='ไฟส่องสว่าง'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-yellow-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-yellow-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 017 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">ไฟส่องสว่าง</h4>
+        <p class="text-xs text-gray-500">ไฟถนน</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='ขยะ/สิ่งปฏิกูล'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-green-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-green-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">ขยะ</h4>
+        <p class="text-xs text-gray-500">สิ่งปฏิกูล</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='น้ำประปา'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-blue-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8zm0 18c-3.35 0-6-2.57-6-6.2 0-2.34 1.95-5.44 6-9.14 4.05 3.7 6 6.79 6 9.14 0 3.63-2.65 6.2-6 6.2z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">น้ำประปา</h4>
+        <p class="text-xs text-gray-500">น้ำไม่ไหล</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='น้ำท่วม'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-cyan-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-cyan-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-cyan-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M12 2L4 12h3v8h10v-8h3L12 2zm0 3.5L16.5 11H15v7H9v-7H7.5L12 5.5z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">น้ำท่วม</h4>
+        <p class="text-xs text-gray-500">ทางระบายน้ำ</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='สัตว์จรจัด'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-amber-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-amber-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-amber-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M4.5 9.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5zm15 0a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM12 4a3 3 0 100 6 3 3 0 000-6zm0 8c-4 0-7 2-7 4.5V20h14v-3.5c0-2.5-3-4.5-7-4.5z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">สัตว์จรจัด</h4>
+        <p class="text-xs text-gray-500">สุนัข แมว</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='สิ่งแวดล้อม'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-emerald-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9zm0-18C7.03 4 3 8.03 3 13c4.97 0 9-4.03 9-9zm0 0v9m0 0c4.97 0 9-4.03 9-9" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">สิ่งแวดล้อม</h4>
+        <p class="text-xs text-gray-500">มลพิษ</p>
+       </div>
+       <div onclick="showPage('complaint'); document.getElementById('problem-type').value='อื่น ๆ'" class="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-400 hover:shadow-lg transition-all cursor-pointer group">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gray-100 rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-gray-200 transition-colors">
+         <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+         </svg>
+        </div>
+        <h4 class="font-bold text-xs sm:text-base text-gray-800">อื่น ๆ</h4>
+        <p class="text-xs text-gray-500">ปัญหาอื่น</p>
+       </div>
+      </div>
+     </div>
+    </section><!-- Statistics -->
+    <section class="py-6 sm:py-12 bg-white border-t border-gray-200">
+     <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+       <div class="text-center p-3 sm:p-6 bg-gray-50 rounded-lg sm:rounded-xl">
+        <div id="stat-total" class="text-2xl sm:text-4xl font-bold text-blue-900">
+         0
+        </div>
+        <p class="text-xs sm:text-base text-gray-600 mt-1 sm:mt-2">เรื่องทั้งหมด</p>
+       </div>
+       <div class="text-center p-3 sm:p-6 bg-yellow-50 rounded-lg sm:rounded-xl">
+        <div id="stat-pending" class="text-2xl sm:text-4xl font-bold text-yellow-600">
+         0
+        </div>
+        <p class="text-xs sm:text-base text-gray-600 mt-1 sm:mt-2">รอตรวจสอบ</p>
+       </div>
+       <div class="text-center p-3 sm:p-6 bg-blue-50 rounded-lg sm:rounded-xl">
+        <div id="stat-processing" class="text-2xl sm:text-4xl font-bold text-blue-600">
+         0
+        </div>
+        <p class="text-xs sm:text-base text-gray-600 mt-1 sm:mt-2">กำลังดำเนินการ</p>
+       </div>
+       <div class="text-center p-3 sm:p-6 bg-green-50 rounded-lg sm:rounded-xl">
+        <div id="stat-completed" class="text-2xl sm:text-4xl font-bold text-green-600">
+         0
+        </div>
+        <p class="text-xs sm:text-base text-gray-600 mt-1 sm:mt-2">เสร็จสิ้น</p>
+       </div>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 2: Complaint Form -->
+   <div id="page-complaint" class="page">
+    <div class="max-w-4xl mx-auto px-4 py-4 sm:py-8">
+     <div class="bg-white rounded-lg sm:rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-8 py-4 sm:py-6">
+       <h2 class="text-lg sm:text-2xl font-bold">แบบฟอร์มแจ้งเรื่องร้องเรียน</h2>
+       <p class="text-xs sm:text-base text-blue-100 mt-1 sm:mt-2">กรุณากรอกข้อมูลให้ครบถ้วน</p>
+      </div>
+      <form id="complaint-form" class="p-4 sm:p-8 space-y-4 sm:space-y-6"><!-- Personal Info -->
+       <div class="border-b border-gray-200 pb-4 sm:pb-6">
+        <h3 class="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">ข้อมูลผู้แจ้ง</h3>
+        <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
+         <div><label for="full-name" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">ชื่อ-นามสกุล <span class="text-red-500">*</span></label> <input type="text" id="full-name" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="กรอกชื่อ-นามสกุล">
+         </div>
+         <div><label for="phone" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label> <input type="tel" id="phone" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="08X-XXX-XXXX">
+         </div>
+         <div><label for="email" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">อีเมล</label> <input type="email" id="email" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="example@email.com">
+         </div>
+         <div><label for="village" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">หมู่บ้าน/ตำบล</label> <input type="text" id="village" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="หมู่บ้าน/ตำบล">
+         </div>
+        </div>
+        <div class="mt-3 sm:mt-4"><label for="address" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">ที่อยู่</label> <input type="text" id="address" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="บ้านเลขที่ ซอย ถนน">
+        </div>
+       </div><!-- Problem Info -->
+       <div class="space-y-3 sm:space-y-4">
+        <h3 class="text-base sm:text-lg font-bold text-gray-800">รายละเอียดปัญหา</h3>
+        <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
+         <div><label for="problem-type" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">ประเภทปัญหา <span class="text-red-500">*</span></label> <select id="problem-type" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"> <option value="">-- เลือกประเภท --</option> <option value="ถนนชำรุด">ถนนชำรุด</option> <option value="ไฟส่องสว่าง">ไฟส่องสว่าง</option> <option value="ขยะ/สิ่งปฏิกูล">ขยะ/สิ่งปฏิกูล</option> <option value="น้ำประปา">น้ำประปา</option> <option value="น้ำท่วม">น้ำท่วม</option> <option value="สัตว์จรจัด">สัตว์จรจัด</option> <option value="สิ่งแวดล้อม">สิ่งแวดล้อม</option> <option value="อื่น ๆ">อื่น ๆ</option> </select>
+         </div>
+         </div>
+        </div>
+        <div><label for="description" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">รายละเอียดปัญหา <span class="text-red-500">*</span></label> <textarea id="description" required rows="4" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none" placeholder="อธิบายรายละเอียดปัญหา..."></textarea>
+        </div>
+        <div><label for="location" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">สถานที่เกิดเหตุ <span class="text-red-500">*</span></label> <input type="text" id="location" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="ระบุตำแหน่งหรือจุดสังเกต">
+        </div>
+        <div><label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">แนบรูปภาพ (ถ้ามี)</label>
+         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" onclick="document.getElementById('file-input').click()">
+          <svg class="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-1 sm:mb-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <p class="text-xs sm:text-base text-gray-600">คลิกเพื่อเลือกรูปภาพ</p>
+          <p class="text-xs text-gray-400 mt-1">JPG, PNG ขนาดไม่เกิน 5MB</p><input type="file" id="file-input" accept="image/*" class="hidden">
+         </div>
+         <div id="file-preview" class="mt-2 hidden">
+          <p class="text-sm text-green-600 flex items-center gap-1 mb-2">
+           <svg class="w-4 h-4" fill="currentColor" viewbox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+           </svg><span id="file-name">เลือกไฟล์แล้ว</span></p><img id="image-preview" class="w-full max-w-xs h-auto rounded-lg border border-gray-300" alt="ตัวอย่างรูป">
+         </div>
+        </div>
+       </div><!-- Submit -->
+       <div class="pt-4 sm:pt-6 border-t border-gray-200"><button type="submit" id="submit-btn" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-lg hover:shadow-xl transition-all"> ส่งเรื่องร้องเรียน </button>
+       </div>
+      </form><!-- Success Message -->
+      <div id="success-message" class="hidden p-6 sm:p-8 text-center">
+       <div class="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-green-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+       </div>
+       <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-2">ส่งเรื่องสำเร็จ!</h3>
+       <p class="text-xs sm:text-base text-gray-600 mb-3 sm:mb-4">ระบบได้รับเรื่องของท่านแล้ว</p>
+       <div class="bg-blue-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6">
+        <p class="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">รหัสติดตาม</p>
+        <p id="tracking-code-display" class="text-2xl sm:text-3xl font-bold text-blue-900">NH-XXXXXX</p>
+        <p class="text-xs sm:text-sm text-gray-500 mt-2">จดรหัสนี้เพื่อตรวจสอบสถานะ</p>
+       </div><button onclick="resetForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium transition-colors"> แจ้งเรื่องใหม่ </button>
+      </div>
+     </div>
+    </div>
+   </div><!-- Page 3: Status Check -->
+   <div id="page-status" class="page">
+    <div class="max-w-4xl mx-auto px-4 py-4 sm:py-8">
+     <div class="bg-white rounded-lg sm:rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-8 py-4 sm:py-6">
+       <h2 class="text-lg sm:text-2xl font-bold">ตรวจสอบสถานะ</h2>
+       <p class="text-xs sm:text-base text-blue-100 mt-1 sm:mt-2">กรอกรหัสติดตามเรื่องของท่าน</p>
+      </div>
+      <div class="p-4 sm:p-8">
+       <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-6 sm:mb-8"><input type="text" id="tracking-input" class="flex-1 px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="เช่น NH-XXXXXX"> <button onclick="searchStatus()" id="search-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 sm:py-3 rounded-lg font-bold transition-colors text-sm sm:text-base"> ค้นหา </button>
+       </div><!-- Search Result -->
+       <div id="status-result" class="hidden">
+        <div class="bg-gray-50 rounded-xl p-4 sm:p-6 border border-gray-200">
+         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2">
+          <div>
+           <p class="text-xs sm:text-sm text-gray-500">รหัสติดตาม</p>
+           <p id="result-code" class="text-lg sm:text-xl font-bold text-gray-800">NH-XXXXXX</p>
+          </div><span id="result-status" class="px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold status-pending">รอตรวจสอบ</span>
+         </div>
+         <div class="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div>
+           <p class="text-xs sm:text-sm text-gray-500">วันที่แจ้ง</p>
+           <p id="result-date" class="font-medium text-xs sm:text-base text-gray-800">-</p>
+          </div>
+          <div>
+           <p class="text-xs sm:text-sm text-gray-500">ประเภทปัญหา</p>
+           <p id="result-type" class="font-medium text-xs sm:text-base text-gray-800">-</p>
+          </div>
+          <div>
+           <p class="text-xs sm:text-sm text-gray-500">หัวข้อเรื่อง</p>
+           <p id="result-subject" class="font-medium text-xs sm:text-base text-gray-800">-</p>
+          </div>
+          <div>
+           <p class="text-xs sm:text-sm text-gray-500">สถานที่</p>
+           <p id="result-location" class="font-medium text-xs sm:text-base text-gray-800">-</p>
+          </div>
+         </div>
+         <div class="border-t border-gray-200 pt-4">
+          <p class="text-xs sm:text-sm text-gray-500 mb-2">หมายเหตุจากเจ้าหน้าที่</p>
+          <p id="result-note" class="text-xs sm:text-sm text-gray-700 bg-white p-3 sm:p-4 rounded-lg border border-gray-100">-</p>
+         </div>
+        </div>
+       </div><!-- Not Found -->
+       <div id="status-not-found" class="hidden text-center py-8 sm:py-12">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+         <svg class="w-8 h-8 sm:w-10 sm:h-10 text-red-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+         </svg>
+        </div>
+        <h3 class="text-base sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">ไม่พบข้อมูล</h3>
+        <p class="text-xs sm:text-base text-gray-600">กรุณาตรวจสอบรหัสติดตาม</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Page 4: Staff Login -->
+   <div id="page-staff-login" class="page">
+    <div class="max-w-md mx-auto px-4 py-12 sm:py-16">
+     <div class="bg-white rounded-lg sm:rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+      <div class="bg-gradient-to-r from-gray-900 to-gray-800 text-white px-6 sm:px-8 py-4 sm:py-6 text-center">
+       <div class="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-gray-800" fill="currentColor" viewbox="0 0 24 24">
+         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+        </svg>
+       </div>
+       <h2 class="text-lg sm:text-2xl font-bold">เข้าสู่ระบบ</h2>
+       <p class="text-xs sm:text-sm text-gray-300 mt-1 sm:mt-2">สำหรับเจ้าหน้าที่เท่านั้น</p>
+      </div>
+      <form id="login-form" class="p-6 sm:p-8 space-y-4 sm:space-y-6">
+       <div><label for="staff-username" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">ชื่อผู้ใช้</label> <input type="text" id="staff-username" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="กรอกชื่อผู้ใช้">
+       </div>
+       <div><label for="staff-password" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">รหัสผ่าน</label> <input type="password" id="staff-password" required class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="กรอกรหัสผ่าน">
+       </div>
+       <div id="login-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-xs sm:text-sm">
+        ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+       </div><button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-bold transition-colors text-sm sm:text-base"> เข้าสู่ระบบ </button>
+       <p class="text-center text-xs sm:text-sm text-gray-500">Demo: admin / admin123</p>
+      </form>
+     </div>
+    </div>
+   </div><!-- Page 5: Staff Dashboard -->
+   <div id="page-staff-dashboard" class="page">
+    <div class="max-w-7xl mx-auto px-4 py-4 sm:py-8">
+     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+      <div>
+       <h2 class="text-lg sm:text-2xl font-bold text-gray-800">แดชบอร์ด</h2>
+       <p class="text-xs sm:text-base text-gray-600">จัดการเรื่องร้องเรียน</p>
+      </div><button onclick="logout()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors text-xs sm:text-base"> ออกจากระบบ </button>
+     </div><!-- Summary Cards -->
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-6 border border-blue-100 shadow-sm">
+       <div class="flex items-center gap-2 sm:gap-4">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z" />
+         </svg>
+        </div>
+        <div class="min-w-0">
+         <p id="dash-total" class="text-2xl sm:text-3xl font-bold text-gray-800">0</p>
+         <p class="text-xs sm:text-sm text-gray-500 truncate">ทั้งหมด</p>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-6 border border-yellow-200 shadow-sm">
+       <div class="flex items-center gap-2 sm:gap-4">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-yellow-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+         </svg>
+        </div>
+        <div class="min-w-0">
+         <p id="dash-pending" class="text-2xl sm:text-3xl font-bold text-yellow-600">0</p>
+         <p class="text-xs sm:text-sm text-gray-500 truncate">รอตรวจสอบ</p>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-6 border border-blue-200 shadow-sm">
+       <div class="flex items-center gap-2 sm:gap-4">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+         </svg>
+        </div>
+        <div class="min-w-0">
+         <p id="dash-processing" class="text-2xl sm:text-3xl font-bold text-blue-600">0</p>
+         <p class="text-xs sm:text-sm text-gray-500 truncate">ดำเนินการ</p>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-6 border border-green-200 shadow-sm">
+       <div class="flex items-center gap-2 sm:gap-4">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-600" fill="currentColor" viewbox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+         </svg>
+        </div>
+        <div class="min-w-0">
+         <p id="dash-completed" class="text-2xl sm:text-3xl font-bold text-green-600">0</p>
+         <p class="text-xs sm:text-sm text-gray-500 truncate">เสร็จสิ้น</p>
+        </div>
+       </div>
+      </div>
+     </div><!-- Complaints Table -->
+     <div class="bg-white rounded-lg sm:rounded-xl border border-blue-100 shadow-sm overflow-hidden">
+      <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+       <h3 class="text-base sm:text-lg font-bold text-gray-800">รายการร้องเรียน</h3><select id="filter-status" onchange="filterComplaints()" class="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm w-full sm:w-auto"> <option value="all">ทั้งหมด</option> <option value="รอตรวจสอบ">รอตรวจสอบ</option> <option value="กำลังดำเนินการ">กำลังดำเนินการ</option> <option value="เสร็จสิ้น">เสร็จสิ้น</option> </select>
+      </div>
+      <div class="overflow-x-auto">
+       <table class="w-full text-xs sm:text-base">
+        <thead class="bg-gray-50">
+         <tr>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">รหัส</th>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">ผู้แจ้ง</th>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">ประเภท</th>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">หัวข้อ</th>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">สถานะ</th>
+          <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">จัดการ</th>
+         </tr>
+        </thead>
+        <tbody id="complaints-table" class="divide-y divide-gray-200">
+         <tr>
+          <td colspan="6" class="px-4 sm:px-6 py-6 sm:py-12 text-center text-gray-500 text-xs sm:text-base">ยังไม่มีเรื่องร้องเรียน</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+    </div>
+   </div><!-- Detail Modal -->
+   <div id="detail-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+     <div class="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0">
+      <h3 class="text-base sm:text-lg font-bold">รายละเอียด</h3><button onclick="closeModal()" class="hover:bg-white/20 p-2 rounded-lg transition-colors flex-shrink-0">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <div class="p-4 sm:p-6 space-y-4 sm:space-y-4">
+      <div class="grid sm:grid-cols-2 gap-3 sm:gap-4">
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">รหัสติดตาม</p>
+        <p id="modal-code" class="font-bold text-sm sm:text-base text-gray-800">-</p>
+       </div>
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">วันที่แจ้ง</p>
+        <p id="modal-date" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+       </div>
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">ชื่อผู้แจ้ง</p>
+        <p id="modal-name" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+       </div>
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">เบอร์โทร</p>
+        <p id="modal-phone" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+       </div>
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">อีเมล</p>
+        <p id="modal-email" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+       </div>
+       <div>
+        <p class="text-xs sm:text-sm text-gray-500">ประเภทปัญหา</p>
+        <p id="modal-type" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+       </div>
+      </div>
+      <div>
+       <p class="text-xs sm:text-sm text-gray-500">หัวข้อเรื่อง</p>
+       <p id="modal-subject" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+      </div>
+      <div>
+       <p class="text-xs sm:text-sm text-gray-500">รายละเอียด</p>
+       <p id="modal-description" class="font-medium text-xs sm:text-sm text-gray-800 bg-gray-50 p-3 sm:p-4 rounded-lg">-</p>
+      </div>
+      <div>
+       <p class="text-xs sm:text-sm text-gray-500">สถานที่เกิดเหตุ</p>
+       <p id="modal-location" class="font-medium text-sm sm:text-base text-gray-800">-</p>
+      </div>
+      <div class="border-t border-gray-200 pt-3 sm:pt-4 space-y-3 sm:space-y-4">
+       <div><label for="modal-status-select" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">อัปเดตสถานะ</label> <select id="modal-status-select" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg"> <option value="รอตรวจสอบ">รอตรวจสอบ</option> <option value="กำลังดำเนินการ">กำลังดำเนินการ</option> <option value="เสร็จสิ้น">เสร็จสิ้น</option> </select>
+       </div>
+       <div><label for="modal-note" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">หมายเหตุเจ้าหน้าที่</label> <textarea id="modal-note" rows="3" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-gray-300 rounded-lg resize-none" placeholder="บันทึกข้อความ..."></textarea>
+       </div>
+       <div class="flex flex-col sm:flex-row gap-2 sm:gap-4"><button onclick="updateComplaint()" id="update-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-lg font-bold transition-colors text-xs sm:text-base"> บันทึก </button> <button onclick="closeModal()" class="px-4 sm:px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 sm:py-3 rounded-lg font-medium transition-colors text-xs sm:text-base"> ปิด </button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Footer -->
+   <footer id="main-footer" class="bg-gray-900 text-white py-6 sm:py-8 mt-auto">
+    <div class="max-w-6xl mx-auto px-4">
+     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6">
+      <div>
+       <h4 class="font-bold text-base sm:text-lg mb-2 sm:mb-4 text-yellow-400">เทศบาลหนองหาร</h4>
+       <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">เลขที่ 999 หมู่ 1 ตำบลหนองหาร อำเภอสันทราย จังหวัยเชียงใหม่</p>
+      </div>
+      <div>
+       <h4 class="font-bold text-base sm:text-lg mb-2 sm:mb-4 text-yellow-400">ติดต่อเรา</h4>
+       <p class="text-gray-300 text-xs sm:text-sm">โทรศัพท์: <span id="footer-phone">053-XXX-XXX</span></p>
+       <p class="text-gray-300 text-xs sm:text-sm">โทรสาร: 053-XXX-XXX</p>
+       <p class="text-gray-300 text-xs sm:text-sm">อีเมล: saraban@nonghan.go.th</p>
+      </div>
+      <div>
+       <h4 class="font-bold text-base sm:text-lg mb-2 sm:mb-4 text-yellow-400">วันทำการ</h4>
+       <p class="text-gray-300 text-xs sm:text-sm">วันจันทร์ - ศุกร์</p>
+       <p class="text-gray-300 text-xs sm:text-sm">08:30 - 16:30 น.</p>
+       <p class="text-gray-300 text-xs sm:text-sm">(ยกเว้นวันหยุด)</p>
+      </div>
+     </div>
+     <div class="border-t border-gray-700 pt-4 sm:pt-6 text-center text-gray-400 text-xs">
+      © 2567 เทศบาลหนองหาร สงวนลิขสิทธิ์
+     </div>
+    </div>
+   </footer>
+  </div>
+  <script>
+    let complaints = [];
+    let currentComplaint = null;
+    let isLoggedIn = false;
+
+    const defaultConfig = {
+      site_title: 'ระบบร้องเรียน/ร้องทุกข์',
+      municipality_name: 'เทศบาลหนองหาร',
+      contact_phone: '053-XXX-XXX'
+    };
+
+    const dataHandler = {
+      onDataChanged(data) {
+        complaints = data;
+        updateStatistics();
+        renderComplaintsTable();
+      }
+    };
+
+    async function init() {
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById('header-title').textContent = config.site_title || defaultConfig.site_title;
+            document.getElementById('header-subtitle').textContent = config.municipality_name || defaultConfig.municipality_name;
+            document.getElementById('footer-phone').textContent = config.contact_phone || defaultConfig.contact_phone;
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['site_title', config.site_title || defaultConfig.site_title],
+            ['municipality_name', config.municipality_name || defaultConfig.municipality_name],
+            ['contact_phone', config.contact_phone || defaultConfig.contact_phone]
+          ])
+        });
+      }
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) console.error('Data SDK init failed');
+      }
+
+      setupEventListeners();
+    }
+
+    function setupEventListeners() {
+      document.getElementById('complaint-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await submitComplaint();
+      });
+
+      document.getElementById('login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleLogin();
+      });
+
+      document.getElementById('file-input').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            document.getElementById('file-preview').classList.remove('hidden');
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('image-preview').src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      window.scrollTo(0, 0);
+
+      if (pageId === 'staff-dashboard' && !isLoggedIn) {
+        showPage('staff-login');
+      }
+    }
+
+    function generateTrackingCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = 'NH-';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    async function submitComplaint() {
+      if (complaints.length >= 999) {
+        showToast('ระบบเต็มแล้ว', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'กำลังส่ง...';
+
+      const trackingCode = generateTrackingCode();
+      const fileInput = document.getElementById('file-input');
+      let imageData = '';
+      let imageName = '';
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        imageName = file.name;
+        const reader = new FileReader();
+        imageData = await new Promise((resolve) => {
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const complaintData = {
+        tracking_code: trackingCode,
+        full_name: document.getElementById('full-name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value || '',
+        address: document.getElementById('address').value || '',
+        village: document.getElementById('village').value || '',
+        problem_type: document.getElementById('problem-type').value,
+        subject: document.getElementById('subject').value,
+        description: document.getElementById('description').value,
+        location: document.getElementById('location').value,
+        status: 'รอตรวจสอบ',
+        staff_note: '',
+        created_at: new Date().toISOString(),
+        image_name: imageName
+      };
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.create(complaintData);
+        if (result.isOk) {
+          document.getElementById('tracking-code-display').textContent = trackingCode;
+          document.getElementById('complaint-form').classList.add('hidden');
+          document.getElementById('success-message').classList.remove('hidden');
+        } else {
+          showToast('เกิดข้อผิดพลาด', 'error');
+        }
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'ส่งเรื่องร้องเรียน';
+    }
+
+    function resetForm() {
+      document.getElementById('complaint-form').reset();
+      document.getElementById('complaint-form').classList.remove('hidden');
+      document.getElementById('success-message').classList.add('hidden');
+      document.getElementById('file-preview').classList.add('hidden');
+    }
+
+    function searchStatus() {
+      const code = document.getElementById('tracking-input').value.trim().toUpperCase();
+      const complaint = complaints.find(c => c.tracking_code === code);
+
+      document.getElementById('status-result').classList.add('hidden');
+      document.getElementById('status-not-found').classList.add('hidden');
+
+      if (complaint) {
+        document.getElementById('result-code').textContent = complaint.tracking_code;
+        document.getElementById('result-date').textContent = formatDate(complaint.created_at);
+        document.getElementById('result-type').textContent = complaint.problem_type;
+        document.getElementById('result-subject').textContent = complaint.subject;
+        document.getElementById('result-location').textContent = complaint.location;
+        document.getElementById('result-note').textContent = complaint.staff_note || 'ยังไม่มีหมายเหตุ';
+
+        const statusEl = document.getElementById('result-status');
+        statusEl.textContent = complaint.status;
+        statusEl.className = 'px-4 py-2 rounded-full text-sm font-bold ' + getStatusClass(complaint.status);
+
+        document.getElementById('status-result').classList.remove('hidden');
+      } else {
+        document.getElementById('status-not-found').classList.remove('hidden');
+      }
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('staff-username').value;
+      const password = document.getElementById('staff-password').value;
+
+      if (username === 'admin' && password === 'admin123') {
+        isLoggedIn = true;
+        document.getElementById('login-error').classList.add('hidden');
+        showPage('staff-dashboard');
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    }
+
+    function logout() {
+      isLoggedIn = false;
+      document.getElementById('staff-username').value = '';
+      document.getElementById('staff-password').value = '';
+      showPage('home');
+    }
+
+    function updateStatistics() {
+      const total = complaints.length;
+      const pending = complaints.filter(c => c.status === 'รอตรวจสอบ').length;
+      const processing = complaints.filter(c => c.status === 'กำลังดำเนินการ').length;
+      const completed = complaints.filter(c => c.status === 'เสร็จสิ้น').length;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-pending').textContent = pending;
+      document.getElementById('stat-processing').textContent = processing;
+      document.getElementById('stat-completed').textContent = completed;
+
+      if (document.getElementById('dash-total')) {
+        document.getElementById('dash-total').textContent = total;
+        document.getElementById('dash-pending').textContent = pending;
+        document.getElementById('dash-processing').textContent = processing;
+        document.getElementById('dash-completed').textContent = completed;
+      }
+    }
+
+    function renderComplaintsTable() {
+      const tbody = document.getElementById('complaints-table');
+      const filter = document.getElementById('filter-status').value;
+
+      let filtered = complaints;
+      if (filter !== 'all') {
+        filtered = complaints.filter(c => c.status === filter);
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-12 text-center text-gray-500">ยังไม่มีเรื่องร้องเรียน</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(c => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap font-medium text-xs sm:text-base text-blue-600">${c.tracking_code}</td>
+          <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-base text-gray-800">${c.full_name}</td>
+          <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-base text-gray-600 hidden sm:table-cell">${c.problem_type}</td>
+          <td class="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-base text-gray-800 max-w-xs truncate hidden md:table-cell">${c.subject}</td>
+          <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+            <span class="px-2 sm:px-3 py-1 rounded-full text-xs font-bold ${getStatusClass(c.status)}">${c.status}</span>
+          </td>
+          <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+            <button onclick="openDetail('${c.tracking_code}')" class="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-base">ดู</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterComplaints() {
+      renderComplaintsTable();
+    }
+
+    function openDetail(code) {
+      currentComplaint = complaints.find(c => c.tracking_code === code);
+      if (!currentComplaint) return;
+
+      document.getElementById('modal-code').textContent = currentComplaint.tracking_code;
+      document.getElementById('modal-date').textContent = formatDate(currentComplaint.created_at);
+      document.getElementById('modal-name').textContent = currentComplaint.full_name;
+      document.getElementById('modal-phone').textContent = currentComplaint.phone;
+      document.getElementById('modal-email').textContent = currentComplaint.email || '-';
+      document.getElementById('modal-type').textContent = currentComplaint.problem_type;
+      document.getElementById('modal-subject').textContent = currentComplaint.subject;
+      document.getElementById('modal-description').textContent = currentComplaint.description;
+      document.getElementById('modal-location').textContent = currentComplaint.location;
+      document.getElementById('modal-status-select').value = currentComplaint.status;
+      document.getElementById('modal-note').value = currentComplaint.staff_note || '';
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      currentComplaint = null;
+    }
+
+    async function updateComplaint() {
+      if (!currentComplaint) return;
+
+      const btn = document.getElementById('update-btn');
+      btn.disabled = true;
+      btn.textContent = 'กำลังบันทึก...';
+
+      const updatedComplaint = {
+        ...currentComplaint,
+        status: document.getElementById('modal-status-select').value,
+        staff_note: document.getElementById('modal-note').value
+      };
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.update(updatedComplaint);
+        if (result.isOk) {
+          showToast('บันทึกเรียบร้อย', 'success');
+          closeModal();
+        } else {
+          showToast('เกิดข้อผิดพลาด', 'error');
+        }
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'บันทึก';
+    }
+
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function getStatusClass(status) {
+      switch (status) {
+        case 'รอตรวจสอบ': return 'status-pending';
+        case 'กำลังดำเนินการ': return 'status-processing';
+        case 'เสร็จสิ้น': return 'status-completed';
+        default: return 'status-pending';
+      }
+    }
+
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.className = `fixed bottom-4 right-4 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg z-50 text-xs sm:text-base ${type === 'success' ? 'bg-green-600' : 'bg-red-600'} text-white font-medium`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cca0b4f71c6d32c',t:'MTc3MDg3Nzg5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
